@@ -57,5 +57,12 @@ docker compose up
 # 8. connect postgres DB
 - `DBeaver`
 
-# 9. Test the application
+# 9. prismaSetting
+```bash
+npm insatll prisma
+npx prisma init
+```
+
+
+# 10. Test the application
 - `postman`
