@@ -3,11 +3,6 @@
 npm install -g @nestjs/cli
 nest new luniverse-nova-multichain-apis
 cd luniverse-nova-multichain-apis
-
-// todo setting prisma
-
-# npm i pg typeorm @nestjs/typeorm @nestjs/config
-
 # --- skip if git clone this repo and just npm install ---
 ```
 
@@ -47,11 +42,9 @@ touch src/users/user.entity.ts
 # 6. Update the Main Module
 - `src/app.module.ts`
 
-# 7. Dockerize the application
+# 7. set up infra
 ```bash
-docker compose up -d db
-docker compose build
-docker compose up 
+docker-compose -f infra/docker-compose.yml up -d
 ```
 
 # 8. connect postgres DB
