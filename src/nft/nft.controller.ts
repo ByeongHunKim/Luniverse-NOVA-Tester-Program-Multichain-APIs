@@ -18,7 +18,6 @@ export class NftController {
     @Param('network') network: string,
     @Body() createNftListDto: CreateNftListDto,
   ): Promise<any> {
-    console.log(protocol, network)
     const { ownerAddress } = createNftListDto
     return this.nftService.listNftContractMetadataByOwner(protocol, network, ownerAddress)
   }
