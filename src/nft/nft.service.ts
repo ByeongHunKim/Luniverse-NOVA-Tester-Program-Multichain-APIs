@@ -1,21 +1,30 @@
 import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { AuthService } from '../auth/auth.service'
 import axios from 'axios'
 
 @Injectable()
 export class NftService {
 
-  // todo config
-  private BASE_URL = 'https://web3.luniverse.io/v1/'
-  private AUTH_TOKEN = ''
+  private authToken: string
+  private readonly baseUrl: string
 
-  // params : protocol, network, body : ownerAddress
-  async listNftContractMetadataByOwner(protocol: string, network: string, ownerAddress: string) : Promise<any> {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService
+  ) {
+    this.baseUrl = this.configService.get<string>('novaServerBaseUrl')
+  }
+
+  async listNftContractMetadataByOwner(protocol: string, network: string, ownerAddress: string): Promise<any> {
     try {
-      console.log('ownerAddress',ownerAddress)
-      const endPoint = `${this.BASE_URL}/${protocol}/${network}/nft/listNftContractMetadataByOwner`
+      // todo 토큰의 유효성을 확인하고, 만료된 경우 새 토큰을 가져오는 로직을 추가 ( 그럴려면 db에 저장한 auth-token 을 사용해야함 )
+      await this.fetchAndSetAuthToken()
+
+      const endPoint = `${this.baseUrl}/${protocol}/${network}/nft/listNftContractMetadataByOwner`
 
       const headers = {
-        'Authorization': `Bearer ${this.AUTH_TOKEN}`,
+        'Authorization': `Bearer ${this.authToken}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
@@ -23,8 +32,18 @@ export class NftService {
       const response = await axios.post(endPoint, { ownerAddress }, { headers })
       return response.data
     } catch (e) {
-      console.error('listNftContractMetadataByOwner - error ',e)
+      console.error('listNftContractMetadataByOwner - error ', e)
       return null
+    }
+  }
+
+  private async fetchAndSetAuthToken() {
+    try {
+      const { nodeId, apiKeyId, apiKeySecret } = this.configService.get('nodeInfos')
+      const authToken = await this.authService.fetchAuthTokenFromLuniverseAPI(nodeId, apiKeyId, apiKeySecret)
+      this.authToken = authToken.access_token
+    } catch (error) {
+      console.error('Error fetching auth token:', error)
     }
   }
 }
