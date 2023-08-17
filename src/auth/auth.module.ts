@@ -4,6 +4,7 @@ import { AuthService } from './auth.service'
 
 @Module({
   controllers: [AuthController],
+  exports: [AuthService],
   providers: [AuthService]
 })
 export class AuthModule {}
