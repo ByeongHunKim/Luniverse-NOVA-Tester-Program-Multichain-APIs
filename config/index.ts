@@ -8,6 +8,7 @@ export interface Config {
     apiKeyId: string
     apiKeySecret: string
   }
+  novaServerBaseUrl: string
 }
 
 export default (): Config => ({
@@ -20,4 +21,5 @@ export default (): Config => ({
     apiKeyId: process.env.API_KEY_ID,
     apiKeySecret: process.env.API_KEY_SECRET,
   },
+  novaServerBaseUrl: 'https://web3.luniverse.io/v1/'
 })
