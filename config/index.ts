@@ -1,3 +1,5 @@
+import * as contractABI from './abi/abi.json'
+
 export interface Config {
   port: number
   database: {
@@ -9,6 +11,12 @@ export interface Config {
     apiKeySecret: string
   }
   novaServerBaseUrl: string
+  contract: {
+    endpoint: string
+    address: string
+    abi: any[]
+    signKey: string
+  };
 }
 
 export default (): Config => ({
@@ -21,5 +29,11 @@ export default (): Config => ({
     apiKeyId: process.env.API_KEY_ID,
     apiKeySecret: process.env.API_KEY_SECRET,
   },
-  novaServerBaseUrl: 'https://web3.luniverse.io/v1/'
+  novaServerBaseUrl: 'https://web3.luniverse.io/v1/',
+  contract: {
+    endpoint: 'https://polygon-mumbai.luniverse.io/',
+    address: process.env.ZK_CONTRACT_ADDRESS,
+    abi: contractABI,
+    signKey: process.env.ZK_CONTRACT_SIGNKEY,
+  }
 })
